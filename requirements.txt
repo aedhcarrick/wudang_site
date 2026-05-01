@@ -1,0 +1,7 @@
+-e .
+
+# requirements.txt
+
+flet>=1.0
+pyYaml>=6.0
+

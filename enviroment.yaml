@@ -1,0 +1,10 @@
+name: wudang_website
+
+channels:
+  - defaults
+
+dependencies:
+  - pip
+  - python
+  - pip:
+    - -r requirements.txt  
