@@ -8,6 +8,11 @@ import sys
 def HomePage(page: ft.Page):
     page.padding = 0
     page.title = "Wudang Gongfu of New Orleans"
+    page.appbar = ft.AppBar(
+            title = ft.Text("Wudang Gongfu of New Orleans"),
+            center_title = True,
+            bgcolor = ft.Colors.BLUE,
+    )
 
 if __name__ == '__main__':
     ft.run(HomePage, view=ft.AppView.WEB_BROWSER, port=8080)
