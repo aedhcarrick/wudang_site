@@ -61,14 +61,14 @@ conda_env_activation () {
 }
 
 launch_wudang_site () {
-	python $WUDANG_SITE
+	flet $WUDANG_SITE "$@"
 }
 
 init_site () {
 	conda_env_setup
 	conda_env_activation
-	launch_wudang_site
+	launch_wudang_site "$@"
 }
 
-init_site
+init_site "$@"
 
