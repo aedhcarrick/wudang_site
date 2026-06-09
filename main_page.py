@@ -5,8 +5,9 @@ import flet as ft
 import os
 import time
 import sys
-from scripts.home import Home
-from assets.theme.colors import *
+from pydoc import locate
+from pprint import pprint
+from scripts.controls import Background, Layout
 
 
 def WudangWebsite(page: ft.Page):
@@ -16,22 +17,36 @@ def WudangWebsite(page: ft.Page):
     page.fonts = {
             "Heading_Bold": "theme/fonts/MaShanZheng-Regular.ttf"
     }
+    page.theme = ft.Theme(color_scheme_seed=ft.Colors.GREEN)
+    page.dark_theme = ft.Theme(color_scheme_seed=ft.Colors.RED)
+    page.bgcolor = ft.Colors.TRANSPARENT
+    decoration = ft.BoxDecoration(
+        image = ft.DecorationImage(
+            src = "images/Background-Extend.png",
+            fit = ft.BoxFit.COVER,
+        ),
+    )
+
     page.vertical_alignment = ft.MainAxisAlignment.START
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.bgcolor = ft.Colors.BLACK
-    
+    page.add(
+        ft.Stack(
+            expand = True,
+            controls = [
+                Background(),
+                Layout(),
+            ],
+        )
+    )
+
     def route_change():
-        page.views.clear()
-        page.route = "/home"
-        print("going home")
-        page.views.append(Home())
         page.update()
 
     page.on_route_change = route_change
+    page.route = '/home'
+    page.navigate(page.route)
 
-    route_change()
-#    page.navigate("/home")
-    
+
 
 if __name__ == '__main__':
     ft.run(WudangWebsite, view=ft.AppView.WEB_BROWSER, port=8080, assets_dir="assets")
