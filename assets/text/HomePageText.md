@@ -1,12 +1,6 @@
-*The highest skill appears effortless.*  
-*The deepest strength remains unseen.*
-
- 
+> *The highest skill appears effortless.*  
+> *The deepest strength remains unseen.*
 ---
-
-# Wudang Gongfu of New Orleans
- 
-## Stillness in Motion
 
 
 The internal arts of Wudang are founded upon a simple observation: apparent opposites are not truly opposed. Strength and softness, action and receptivity, discipline and spontaneity each arise from the same source.
@@ -19,7 +13,8 @@ While the practice offers tangible benefits for health, mobility, and self-defen
 
 The path is neither purely martial nor purely contemplative. It is a study of their meeting point: where intention becomes effortless, where force gives way to connection, and where the many expressions of practice return to a single principle.
 
-Welcome to the practice.
+Welcome to the practice.            ![Image][logo]
 
 
+[logo]: ../images/Menu-Seal.png "Seal"
 

@@ -2,8 +2,25 @@
 
 import flet as ft
 
+
 with open('assets/text/HomePageText.md', 'r') as txt:
-    homepage = txt.read()
+    home_page = txt.read()
+
+with open('assets/text/ClassesPageText.md', 'r') as txt:
+    classes_page = txt.read()
+
+with open('assets/text/InstructorsPageText.md', 'r') as txt:
+    instructors_page = txt.read()
+
+with open('assets/text/ResourcesPageText.md', 'r') as txt:
+    resources_page = txt.read()
+
+pages = {
+    "Home": home_page,
+    "Classes": classes_page,
+    "Instructors" : instructors_page,
+    "Resources" : resources_page,
+}
 
 TextStyle = ft.TextStyle(
     bgcolor = ft.Colors.TRANSPARENT,
@@ -62,9 +79,6 @@ class Background(ft.Container):
     def did_mount(self):
         self.fade_in()
 
-pages = ["Home", "Classes", "Instructors", "Resources"]
-current_page = "Home"
-
 
 class DropdownMenuItem(ft.PopupMenuItem):
     def __init__(self, name):
@@ -76,7 +90,7 @@ class DropdownMenuItem(ft.PopupMenuItem):
             on_click = self.goto,
             visible = False
         )
-        self.route_name = f'/{name.lower()}'
+        self.route_name = f'/{name}'
 
     def goto(self):
         self.page.route = self.route_name
@@ -87,7 +101,7 @@ class DropdownMenuItem(ft.PopupMenuItem):
 class DropdownMenu(ft.PopupMenuButton):
     def __init__(self):
         super().__init__(
-            items = [DropdownMenuItem(x) for x in pages],
+            items = [DropdownMenuItem(x) for x in pages.keys()],
             bgcolor = ft.Colors.WHITE_24,
             elevation = 12,
             icon_color = ft.Colors.BLACK,
@@ -120,7 +134,7 @@ class Appbar(ft.Container):
                     color = ft.Colors.BLACK,
                     font_family = "Heading_Bold",
                     theme_style = ft.TextThemeStyle.DISPLAY_LARGE,
-                    ),
+                ),
                 bgcolor = ft.Colors.TRANSPARENT,
                 center_title = True,
                 clip_behavior = ft.ClipBehavior.NONE,
@@ -150,14 +164,15 @@ class PageContent(ft.Container):
             padding = 20,
             bgcolor = ft.Colors.BLACK_12,
             content = ft.Markdown(
-                value = homepage,
+                value = home_page,
                 selectable = True,
                 on_tap_link = self.open_link,
+                extension_set = ft.MarkdownExtensionSet.COMMON_MARK,
                 md_style_sheet = MDStyleSheet,
             ),
             border = ft.Border.all(width=2, color=ft.Colors.BLACK),
             border_radius = 10,
-            expand = 3,
+            expand = 4,
             opacity = 0,
             animate_opacity = ft.Animation(
                 curve = ft.AnimationCurve.EASE_IN,
@@ -174,6 +189,13 @@ class PageContent(ft.Container):
 
     def open_link(self, e):
         self.page.launch_url(e.data)
+
+    def update_content(self):
+        content = self.page.route.lstrip("/")
+        self.content.value = pages[content]
+        self.opacity = 0
+        self.update()
+        self.fade_in()
 
 
 class Margin(ft.Container):
@@ -222,7 +244,8 @@ class Layout(ft.Container):
     def did_mount(self):
         self.fade_in()
 
-
+    def update_content(self):
+        self.content.controls[1].controls[1].update_content()
 
 
     

@@ -15,7 +15,7 @@ def WudangWebsite(page: ft.Page):
     page.margin = 0
     page.title = "Wudang Gongfu of New Orleans"
     page.fonts = {
-            "Heading_Bold": "theme/fonts/MaShanZheng-Regular.ttf"
+            "Heading_Bold": "fonts/MaShanZheng-Regular.ttf"
     }
     page.theme = ft.Theme(color_scheme_seed=ft.Colors.GREEN)
     page.dark_theme = ft.Theme(color_scheme_seed=ft.Colors.RED)
@@ -40,10 +40,10 @@ def WudangWebsite(page: ft.Page):
     )
 
     def route_change():
-        page.update()
+        page.controls[0].controls[1].update_content()
 
     page.on_route_change = route_change
-    page.route = '/home'
+    page.route = '/Home'
     page.navigate(page.route)
 
 
