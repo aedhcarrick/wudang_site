@@ -29,23 +29,31 @@ def WudangWebsite(page: ft.Page):
 
     page.vertical_alignment = ft.MainAxisAlignment.START
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.add(
-        ft.Stack(
-            expand = True,
-            controls = [
-                Background(),
-                Layout(),
-            ],
-        )
-    )
+
 
     def route_change():
         page.controls[0].controls[1].update_content()
 
     page.on_route_change = route_change
-    page.route = '/Home'
-    page.navigate(page.route)
 
+    def connect():
+        page.controls.clear()
+        page.add(
+            ft.Stack(
+                expand = True,
+                controls = [
+                    Background(),
+                    Layout(),
+                ],
+            )
+        )
+        page.navigate(page.route)
+
+    page.on_connect = connect
+
+
+    page.route = '/Home'
+    connect()
 
 
 if __name__ == '__main__':

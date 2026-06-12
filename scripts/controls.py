@@ -1,6 +1,7 @@
 # controls.py
 
 import flet as ft
+from time import sleep
 
 
 with open('assets/text/HomePageText.md', 'r') as txt:
@@ -68,7 +69,7 @@ class Background(ft.Container):
         self.opacity = 0
         self.animate_opacity = ft.Animation(
             curve = ft.AnimationCurve.EASE_IN,
-            duration = ft.Duration(seconds=5),
+            duration = ft.Duration(seconds=3),
         )
         self.on_animation_end = FadeInAppbar
 
@@ -145,7 +146,7 @@ class Appbar(ft.Container):
         self.opacity = 0
         self.animate_opacity = ft.Animation(
             curve = ft.AnimationCurve.EASE_IN,
-            duration = ft.Duration(seconds=5),
+            duration = ft.Duration(seconds=3),
         )
         self.on_animation_end = FadeInPageContent
 
@@ -173,25 +174,49 @@ class PageContent(ft.Container):
         self.opacity = 0
         self.animate_opacity = ft.Animation(
             curve = ft.AnimationCurve.EASE_IN,
-            duration = ft.Duration(seconds=5),
+            duration = ft.Duration(seconds=3),
         )
-
-    def fade_in(self):
-        self.opacity = 1
-        self.update()
+        self.on_animation_end = self.fade_in
 
     def open_link(self, e):
         self.page.launch_url(e.data)
 
     def update_content(self):
         content = self.page.route.lstrip("/")
-        self.content.value = pages[content]
+        if content not in pages:
+            self.page.route = "/Home"
+            self.page.navigate(self.page.route)
+        else:
+            if self.opacity == 1:
+                self.fade_out()
+            else:
+                self.fade_in()
+
+    def fade_in(self):
+        if self.opacity == 0:
+            content = self.page.route.lstrip("/")
+            self.content.value = pages[content]
+            self.opacity = 1
+            self.update()
+
+    def fade_out(self):
         self.opacity = 0
         self.update()
-        self.fade_in()
 
 
-class Margin(ft.Container):
+class LeftMargin(ft.Container):
+    def __init__(self):
+        super().__init__(
+            margin = 0,
+            padding = 0,
+            content = ft.Column(
+                controls = None,
+            ),
+            expand = 1,
+        )
+
+
+class RightMargin(ft.Container):
     def __init__(self):
         super().__init__(
             margin = 0,
@@ -212,7 +237,7 @@ def FadeInAppbar():
     appbar.current.fade_in()
 
 def FadeInPageContent():
-    page_content.current.fade_in()
+    page_content.current.update_content()
 
 
 ## Layout
@@ -226,11 +251,11 @@ class Layout(ft.Container):
                 controls = [
                     Appbar(ref=appbar),
                     ft.Row(
-                        alignment = ft.MainAxisAlignment.CENTER,
+                        vertical_alignment = ft.CrossAxisAlignment.START,
                         controls = [
-                            Margin(),
+                            LeftMargin(),
                             PageContent(ref=page_content),
-                            Margin(),
+                            RightMargin(),
                         ],
                         tight = False,
                         expand = True,

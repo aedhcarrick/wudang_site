@@ -1,5 +1,8 @@
+
+
 > *The highest skill appears effortless.*  
 > *The deepest strength remains unseen.*
+
 ---
 
 
@@ -13,8 +16,6 @@ While the practice offers tangible benefits for health, mobility, and self-defen
 
 The path is neither purely martial nor purely contemplative. It is a study of their meeting point: where intention becomes effortless, where force gives way to connection, and where the many expressions of practice return to a single principle.
 
-Welcome to the practice.            ![Image][logo]
+Welcome to the practice.
 
-
-[logo]: ../images/Menu-Seal.png "Seal"
 
