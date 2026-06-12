@@ -54,23 +54,23 @@ MDStyleSheet = ft.MarkdownStyleSheet(
 
 
 class Background(ft.Container):
-    def __init__(self):
-        super().__init__(
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.expand = True
+        self.bgcolor = ft.Colors.TRANSPARENT
+        self.content = ft.Image(
+            src = "images/Main-Background.png",
+            height = 2400,
+            width = 3600,
+            fit = ft.BoxFit.COVER,
             expand = True,
-            bgcolor = ft.Colors.TRANSPARENT,
-            content = ft.Image(
-                src = "images/Main-Background.png",
-                height = 2400,
-                width = 3600,
-                fit = ft.BoxFit.COVER,
-                expand = True,
-            ),
-            opacity = 0,
-            animate_opacity = ft.Animation(
-                curve = ft.AnimationCurve.EASE_IN,
-                duration = ft.Duration(seconds=5),
-            )
         )
+        self.opacity = 0
+        self.animate_opacity = ft.Animation(
+            curve = ft.AnimationCurve.EASE_IN,
+            duration = ft.Duration(seconds=5),
+        )
+        self.on_animation_end = FadeInAppbar
 
     def fade_in(self):
         self.opacity = 1
@@ -126,66 +126,59 @@ class DropdownMenu(ft.PopupMenuButton):
 
 
 class Appbar(ft.Container):
-    def __init__(self):
-        super().__init__(
-            content = ft.AppBar(
-                title = ft.Text(
-                    value = "Wudang Gongfu of New Orleans",
-                    color = ft.Colors.BLACK,
-                    font_family = "Heading_Bold",
-                    theme_style = ft.TextThemeStyle.DISPLAY_LARGE,
-                ),
-                bgcolor = ft.Colors.TRANSPARENT,
-                center_title = True,
-                clip_behavior = ft.ClipBehavior.NONE,
-                actions = [
-                    DropdownMenu(),
-                ],
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.content = ft.AppBar(
+            title = ft.Text(
+                value = "Wudang Gongfu of New Orleans",
+                color = ft.Colors.BLACK,
+                font_family = "Heading_Bold",
+                theme_style = ft.TextThemeStyle.DISPLAY_LARGE,
             ),
-            opacity = 0,
-            animate_opacity = ft.Animation(
-                curve = ft.AnimationCurve.EASE_IN,
-                duration = ft.Duration(seconds=5),
-            ),
+            bgcolor = ft.Colors.TRANSPARENT,
+            center_title = True,
+            clip_behavior = ft.ClipBehavior.NONE,
+            actions = [
+                DropdownMenu(),
+            ],
         )
+        self.opacity = 0
+        self.animate_opacity = ft.Animation(
+            curve = ft.AnimationCurve.EASE_IN,
+            duration = ft.Duration(seconds=5),
+        )
+        self.on_animation_end = FadeInPageContent
 
     def fade_in(self):
         self.opacity = 1
         self.update()
-
-    def did_mount(self):
-        self.fade_in()
 
 
 class PageContent(ft.Container):
-    def __init__(self):
-        super().__init__(
-            margin = 10,
-            padding = 20,
-            bgcolor = ft.Colors.BLACK_12,
-            content = ft.Markdown(
-                value = home_page,
-                selectable = True,
-                on_tap_link = self.open_link,
-                extension_set = ft.MarkdownExtensionSet.COMMON_MARK,
-                md_style_sheet = MDStyleSheet,
-            ),
-            border = ft.Border.all(width=2, color=ft.Colors.BLACK),
-            border_radius = 10,
-            expand = 4,
-            opacity = 0,
-            animate_opacity = ft.Animation(
-                curve = ft.AnimationCurve.EASE_IN,
-                duration = ft.Duration(seconds=5),
-            ),
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.margin = 10
+        self.padding = 20
+        self.bgcolor = ft.Colors.BLACK_12
+        self.content = ft.Markdown(
+            value = home_page,
+            selectable = True,
+            on_tap_link = self.open_link,
+            extension_set = ft.MarkdownExtensionSet.COMMON_MARK,
+            md_style_sheet = MDStyleSheet,
+        )
+        self.border = ft.Border.all(width=2, color=ft.Colors.BLACK)
+        self.border_radius = 10
+        self.expand = 4
+        self.opacity = 0
+        self.animate_opacity = ft.Animation(
+            curve = ft.AnimationCurve.EASE_IN,
+            duration = ft.Duration(seconds=5),
         )
 
     def fade_in(self):
         self.opacity = 1
         self.update()
-
-    def did_mount(self):
-        self.fade_in()
 
     def open_link(self, e):
         self.page.launch_url(e.data)
@@ -210,6 +203,20 @@ class Margin(ft.Container):
         )
 
 
+## references
+appbar = ft.Ref[Appbar]()
+page_content = ft.Ref[PageContent]()
+
+
+def FadeInAppbar():
+    appbar.current.fade_in()
+
+def FadeInPageContent():
+    page_content.current.fade_in()
+
+
+## Layout
+
 class Layout(ft.Container):
     def __init__(self):
         super().__init__(
@@ -217,12 +224,12 @@ class Layout(ft.Container):
             content = ft.Column(
                 alignment = ft.MainAxisAlignment.START,
                 controls = [
-                    Appbar(),
+                    Appbar(ref=appbar),
                     ft.Row(
                         alignment = ft.MainAxisAlignment.CENTER,
                         controls = [
                             Margin(),
-                            PageContent(),
+                            PageContent(ref=page_content),
                             Margin(),
                         ],
                         tight = False,
@@ -248,4 +255,3 @@ class Layout(ft.Container):
         self.content.controls[1].controls[1].update_content()
 
 
-    
