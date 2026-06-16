@@ -1,85 +1,38 @@
 # controls.py
 
+#   imports
+
 import flet as ft
-from time import sleep
+from pathlib import Path
+
+# get pages
+
+page_dir = Path('./scripts/pages')
+pages = [p.stem for p in page_dir.iterdir() if p.is_file()]
 
 
-with open('assets/text/HomePageText.md', 'r') as txt:
-    home_page = txt.read()
+# class definitions
 
-with open('assets/text/ClassesPageText.md', 'r') as txt:
-    classes_page = txt.read()
-
-with open('assets/text/InstructorsPageText.md', 'r') as txt:
-    instructors_page = txt.read()
-
-with open('assets/text/ResourcesPageText.md', 'r') as txt:
-    resources_page = txt.read()
-
-pages = {
-    "Home": home_page,
-    "Classes": classes_page,
-    "Instructors" : instructors_page,
-    "Resources" : resources_page,
-}
-
-TextStyle = ft.TextStyle(
-    bgcolor = ft.Colors.TRANSPARENT,
-    color = ft.Colors.BLACK,
-)
-
-MDStyleSheet = ft.MarkdownStyleSheet(
-    a_text_style = TextStyle.copy(color=ft.Colors.RED),
-    blockquote_decoration = None,
-    blockquote_text_style = TextStyle,
-    h1_alignment = ft.MainAxisAlignment.START,
-    h1_padding = 0,
-    h1_text_style = TextStyle.copy(),
-    h2_alignment = ft.MainAxisAlignment.START,
-    h2_padding = 0,
-    h2_text_style = TextStyle.copy(),
-    h3_alignment = ft.MainAxisAlignment.START,
-    h3_padding = 0,
-    h3_text_style = TextStyle.copy(),
-    h4_alignment = ft.MainAxisAlignment.START,
-    h4_padding = 0,
-    h4_text_style = TextStyle.copy(),
-    h5_alignment = ft.MainAxisAlignment.START,
-    h5_padding = 0,
-    h5_text_style = TextStyle.copy(),
-    h6_alignment = ft.MainAxisAlignment.START,
-    h6_padding = 0,
-    h6_text_style = TextStyle.copy(),
-    p_text_style = TextStyle.copy(color=ft.Colors.WHITE),
-)
-
-
-class Background(ft.Container):
+class Background(ft.ShaderMask):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.expand = True
-        self.bgcolor = ft.Colors.TRANSPARENT
-        self.content = ft.Image(
-            src = "images/Main-Background.png",
-            height = 2400,
-            width = 3600,
-            fit = ft.BoxFit.COVER,
-            expand = True,
+        super().__init__(
+            blend_mode = ft.BlendMode.DST_IN,
+            shader = ft.LinearGradient(
+                begin = ft.Alignment.CENTER_LEFT,
+                end = ft.Alignment.CENTER_RIGHT,
+                colors = [ft.Colors.TRANSPARENT, ft.Colors.BLACK, ft.Colors.TRANSPARENT],
+                stops = [0.1, 0.5, 0.9],
+            ),
+            content = ft.Image(
+                src = "images/Main-Background.png",
+                height = 2400,
+                width = 3600,
+                fit = ft.BoxFit.COVER,
+                expand = True,
+            ),
+            *args,
+            **kwargs,
         )
-        self.opacity = 0
-        self.animate_opacity = ft.Animation(
-            curve = ft.AnimationCurve.EASE_IN,
-            duration = ft.Duration(seconds=3),
-        )
-        self.on_animation_end = FadeInAppbar
-
-    def fade_in(self):
-        self.opacity = 1
-        self.update()
-
-    def did_mount(self):
-        self.fade_in()
-
 
 class DropdownMenuItem(ft.PopupMenuItem):
     def __init__(self, name):
@@ -102,7 +55,7 @@ class DropdownMenuItem(ft.PopupMenuItem):
 class DropdownMenu(ft.PopupMenuButton):
     def __init__(self):
         super().__init__(
-            items = [DropdownMenuItem(x) for x in pages.keys()],
+            items = [DropdownMenuItem(p) for p in pages],
             bgcolor = ft.Colors.WHITE_24,
             elevation = 12,
             icon_color = ft.Colors.BLACK,
@@ -131,143 +84,32 @@ class Appbar(ft.Container):
         super().__init__(*args, **kwargs)
         self.content = ft.AppBar(
             title = ft.Text(
-                value = "Wudang Gongfu of New Orleans",
-                color = ft.Colors.BLACK,
-                font_family = "Heading_Bold",
+                style = ft.TextStyle(
+                    color = '#944239',
+                    font_family = "Heading_Bold",
+                    shadow = ft.BoxShadow(
+                        color = ft.Colors.BLACK_26,
+                        offset = [5,5],
+                    ),
+                ),
                 theme_style = ft.TextThemeStyle.DISPLAY_LARGE,
+                value = "Wudang Gongfu of New Orleans",
             ),
             bgcolor = ft.Colors.TRANSPARENT,
-            center_title = True,
+            center_title = False,
             clip_behavior = ft.ClipBehavior.NONE,
             actions = [
                 DropdownMenu(),
             ],
         )
+        self.elevation = 12
+        self.margin = 20
         self.opacity = 0
         self.animate_opacity = ft.Animation(
             curve = ft.AnimationCurve.EASE_IN,
             duration = ft.Duration(seconds=3),
         )
-        self.on_animation_end = FadeInPageContent
-
-    def fade_in(self):
-        self.opacity = 1
-        self.update()
-
-
-class PageContent(ft.Container):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.margin = 10
-        self.padding = 20
-        self.bgcolor = ft.Colors.BLACK_12
-        self.content = ft.Markdown(
-            value = home_page,
-            selectable = True,
-            on_tap_link = self.open_link,
-            extension_set = ft.MarkdownExtensionSet.COMMON_MARK,
-            md_style_sheet = MDStyleSheet,
-        )
-        self.border = ft.Border.all(width=2, color=ft.Colors.BLACK)
-        self.border_radius = 10
-        self.expand = 4
-        self.opacity = 0
-        self.animate_opacity = ft.Animation(
-            curve = ft.AnimationCurve.EASE_IN,
-            duration = ft.Duration(seconds=3),
-        )
-        self.on_animation_end = self.fade_in
-
-    def open_link(self, e):
-        self.page.launch_url(e.data)
-
-    def update_content(self):
-        content = self.page.route.lstrip("/")
-        if content not in pages:
-            self.page.route = "/Home"
-            self.page.navigate(self.page.route)
-        else:
-            if self.opacity == 1:
-                self.fade_out()
-            else:
-                self.fade_in()
-
-    def fade_in(self):
-        if self.opacity == 0:
-            content = self.page.route.lstrip("/")
-            self.content.value = pages[content]
-            self.opacity = 1
-            self.update()
-
-    def fade_out(self):
-        self.opacity = 0
-        self.update()
-
-
-class LeftMargin(ft.Container):
-    def __init__(self):
-        super().__init__(
-            margin = 0,
-            padding = 0,
-            content = ft.Column(
-                controls = None,
-            ),
-            expand = 1,
-        )
-
-
-class RightMargin(ft.Container):
-    def __init__(self):
-        super().__init__(
-            margin = 0,
-            padding = 0,
-            content = ft.Column(
-                controls = None,
-            ),
-            expand = 1,
-        )
-
-
-## references
-appbar = ft.Ref[Appbar]()
-page_content = ft.Ref[PageContent]()
-
-
-def FadeInAppbar():
-    appbar.current.fade_in()
-
-def FadeInPageContent():
-    page_content.current.update_content()
-
-
-## Layout
-
-class Layout(ft.Container):
-    def __init__(self):
-        super().__init__(
-            expand = True,
-            content = ft.Column(
-                alignment = ft.MainAxisAlignment.START,
-                controls = [
-                    Appbar(ref=appbar),
-                    ft.Row(
-                        vertical_alignment = ft.CrossAxisAlignment.START,
-                        controls = [
-                            LeftMargin(),
-                            PageContent(ref=page_content),
-                            RightMargin(),
-                        ],
-                        tight = False,
-                        expand = True,
-                    ),
-                ],
-                expand = True,
-            ),
-            animate_opacity = ft.Animation(
-                curve = ft.AnimationCurve.EASE_IN,
-                duration = ft.Duration(seconds=5),
-            ),
-        )
+ #       self.on_animation_end = FadeInPageContent
 
     def fade_in(self):
         self.opacity = 1
@@ -276,7 +118,47 @@ class Layout(ft.Container):
     def did_mount(self):
         self.fade_in()
 
-    def update_content(self):
-        self.content.controls[1].controls[1].update_content()
 
+quote = "Motion in stillness...\n   Stillness in motion."
 
+class Quote(ft.Container):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.right = 0
+        self.bottom = 0
+        self.content = ft.Text(
+            color = '#908E7B',
+            expand = 4,
+            theme_style = ft.TextThemeStyle.HEADLINE_MEDIUM,
+            value = quote,
+        )
+        self.padding = 20
+        self.animate_opacity = ft.Animation(
+            curve = ft.AnimationCurve.EASE_IN,
+            duration = ft.Duration(seconds=5),
+        )
+
+    def fade_in(self):
+        self.opacity = 1
+        self.update()
+
+    def did_mount(self):
+        self.fade_in()
+    
+
+class Layout(ft.Stack):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.controls = [
+            Background(),
+            ft.Column(
+                alignment = ft.MainAxisAlignment.START,
+                controls = [
+                    Appbar(),
+                ],
+                expand = True,
+            ),
+            Quote(),
+        ]
+        self.expand = True
+        

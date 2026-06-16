@@ -7,20 +7,22 @@ import time
 import sys
 from pydoc import locate
 from pprint import pprint
-from scripts.controls import Background, Layout
+from scripts.controls import Layout
 
 
 def WudangWebsite(page: ft.Page):
     page.padding = 0
     page.margin = 0
+    page.expand = True
+
     page.title = "Wudang Gongfu of New Orleans"
     page.fonts = {
-            "Heading_Bold": "fonts/MaShanZheng-Regular.ttf"
+            "Chinese": "fonts/MaShanZheng-Regular.ttf",
+            "Heading_Bold": "fonts/ProtestRevolution-Regular.ttf"
     }
-    page.theme = ft.Theme(color_scheme_seed=ft.Colors.GREEN)
-    page.dark_theme = ft.Theme(color_scheme_seed=ft.Colors.RED)
+
     page.bgcolor = ft.Colors.TRANSPARENT
-    decoration = ft.BoxDecoration(
+    page.decoration = ft.BoxDecoration(
         image = ft.DecorationImage(
             src = "images/Background-Extend.png",
             fit = ft.BoxFit.COVER,
@@ -32,25 +34,19 @@ def WudangWebsite(page: ft.Page):
 
 
     def route_change():
-        page.controls[0].controls[1].update_content()
+        page.update()
 
     page.on_route_change = route_change
+
 
     def connect():
         page.controls.clear()
         page.add(
-            ft.Stack(
-                expand = True,
-                controls = [
-                    Background(),
-                    Layout(),
-                ],
-            )
+            Layout(),
         )
         page.navigate(page.route)
 
     page.on_connect = connect
-
 
     page.route = '/Home'
     connect()

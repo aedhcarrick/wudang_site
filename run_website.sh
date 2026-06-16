@@ -8,7 +8,7 @@ ENV_NAME="wudang_website"
 ENV_MODIFIED=$(date -r $ENV_FILE "+%s")
 ENV_MODIFIED_FILE=".env_updated"
 ENV_UPDATED=0
-WUDANG_SITE="main_page.py"
+WEBSITE="WudangNOLA_website.py"
 
 INSTALL_ENV_DIR="$(pwd)/../installer_files/env"
 if [ -e "$INSTALL_ENV_DIR" ]; then export PATH="$INSTALL_ENV_DIR/bin:$PATH"; fi
@@ -60,14 +60,14 @@ conda_env_activation () {
 	conda info | grep active
 }
 
-launch_wudang_site () {
-	flet $WUDANG_SITE "$@"
+launch_WudangNOLA_website () {
+	flet $WEBSITE "$@"
 }
 
 init_site () {
 	conda_env_setup
 	conda_env_activation
-	launch_wudang_site "$@"
+	launch_WudangNOLA_website "$@"
 }
 
 init_site "$@"

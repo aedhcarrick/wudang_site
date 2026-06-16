@@ -1,2 +1,0 @@
-## Instructors Page Text.
-

@@ -1,2 +1,0 @@
-## Classes Page Text
-
