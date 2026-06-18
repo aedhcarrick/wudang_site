@@ -5,7 +5,6 @@ import flet as ft
 import os
 import time
 import sys
-from pydoc import locate
 from pprint import pprint
 from scripts.controls import Layout
 

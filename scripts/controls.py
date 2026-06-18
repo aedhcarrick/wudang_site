@@ -1,9 +1,12 @@
 # controls.py
 
-#   imports
+
+# imports
 
 import flet as ft
+from pydoc import locate
 from pathlib import Path
+
 
 # get pages
 
@@ -119,33 +122,6 @@ class Appbar(ft.Container):
         self.fade_in()
 
 
-quote = "Motion in stillness...\n   Stillness in motion."
-
-class Quote(ft.Container):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.right = 0
-        self.bottom = 0
-        self.content = ft.Text(
-            color = '#908E7B',
-            expand = 4,
-            theme_style = ft.TextThemeStyle.HEADLINE_MEDIUM,
-            value = quote,
-        )
-        self.padding = 20
-        self.animate_opacity = ft.Animation(
-            curve = ft.AnimationCurve.EASE_IN,
-            duration = ft.Duration(seconds=5),
-        )
-
-    def fade_in(self):
-        self.opacity = 1
-        self.update()
-
-    def did_mount(self):
-        self.fade_in()
-    
-
 class Layout(ft.Stack):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -158,7 +134,21 @@ class Layout(ft.Stack):
                 ],
                 expand = True,
             ),
-            Quote(),
         ]
         self.expand = True
-        
+
+    def update_layout(self):
+        route = self.page.route.lstrip('/')
+        try:
+            page_content = locate(f'scripts.pages.{route}.{route}_Content')
+        except Exception as e:
+            print(f'Page {route} not found. Error: {e}')
+            page_content = None
+        if (page_content != None):
+            if (len(self.controls[1].controls) > 1):
+                self.controls[1].controls.pop()
+            self.controls[1].controls.append(page_content())
+
+    def did_mount(self):
+        self.update_layout()
+    
