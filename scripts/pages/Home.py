@@ -4,6 +4,7 @@
 # imports
 
 import flet as ft
+from time import sleep
 from scripts.quotes import fetch_random_quote
 
 
@@ -22,7 +23,7 @@ class Quote(ft.Container):
                 ft.Text(
                     color = '#908E7B',
                     theme_style = ft.TextThemeStyle.HEADLINE_MEDIUM,
-                    value = fetch_random_quote(),
+                    value = "",
                     expand = True,
                 ),
                 ft.Text(
@@ -38,25 +39,22 @@ class Quote(ft.Container):
         self.padding = 20
         self.opacity = 0
         self.animate_opacity = ft.Animation(
-            curve = ft.AnimationCurve.EASE_IN,
-            duration = ft.Duration(seconds=5),
+            curve = ft.AnimationCurve.EASE_IN_OUT,
+            duration = ft.Duration(seconds=3),
         )
+        self.on_animation_end = self.fade_in
+        self.on_click = self.new_quote
 
     def fade_in(self):
-        self.opacity = 1
-        self.update()
-
-    def fade_out(self):
-        self.opacity = 0
-        self.update()
-
-    def did_mount(self):
-        self.fade_in()
+        if (self.opacity != 1):
+            self.content.controls[0].value = fetch_random_quote()
+            self.opacity = 1
+            self.update()
 
     def new_quote(self):
-        self.content.controls[0].value = fetch_random_quote()
+        self.opacity = 0
         self.update()
-
+        
 
 # page content
 
@@ -68,4 +66,7 @@ class Home_Content(ft.Stack):
         ]
         self.expand = True
 
+    def fade_in(self):
+        for control in self.controls:
+            control.fade_in()
 

@@ -31,24 +31,19 @@ def WudangWebsite(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.START
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-
     def route_change():
-        page.update()
-
-    page.on_route_change = route_change
-
-
-    def connect():
         page.controls.clear()
         page.add(
             Layout(),
         )
-        page.navigate(page.route)
-
-    page.on_connect = connect
+        page.update()
+        print(f'route change: {page.route}')
+    
+    page.on_route_change = route_change
+    page.on_connect = route_change
 
     page.route = '/Home'
-    connect()
+    page.navigate(page.route)
 
 
 if __name__ == '__main__':

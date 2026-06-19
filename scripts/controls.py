@@ -26,16 +26,30 @@ class Background(ft.ShaderMask):
                 colors = [ft.Colors.TRANSPARENT, ft.Colors.BLACK, ft.Colors.TRANSPARENT],
                 stops = [0.1, 0.5, 0.9],
             ),
-            content = ft.Image(
-                src = "images/Main-Background.png",
-                height = 2400,
-                width = 3600,
-                fit = ft.BoxFit.COVER,
+            content = ft.Container(
+                padding = 0,
+                content = ft.Image(
+                    src = "images/Main-Background.png",
+                    height = 2400,
+                    width = 3600,
+                    fit = ft.BoxFit.COVER,
+                    expand = True,
+                ),
+                opacity = 0,
+                animate_opacity = ft.Animation(
+                    curve = ft.AnimationCurve.EASE_IN,
+                    duration = ft.Duration(seconds=3),
+                ),
                 expand = True,
             ),
             *args,
             **kwargs,
         )
+
+    def fade_in(self):
+        self.content.opacity = 0.5
+        self.content.update()
+
 
 class DropdownMenuItem(ft.PopupMenuItem):
     def __init__(self, name):
@@ -88,7 +102,7 @@ class Appbar(ft.Container):
         self.content = ft.AppBar(
             title = ft.Text(
                 style = ft.TextStyle(
-                    color = '#944239',
+                    color = '#000',  ##'#944239',
                     font_family = "Heading_Bold",
                     shadow = ft.BoxShadow(
                         color = ft.Colors.BLACK_26,
@@ -105,21 +119,16 @@ class Appbar(ft.Container):
                 DropdownMenu(),
             ],
         )
-        self.elevation = 12
         self.margin = 20
         self.opacity = 0
         self.animate_opacity = ft.Animation(
             curve = ft.AnimationCurve.EASE_IN,
             duration = ft.Duration(seconds=3),
         )
- #       self.on_animation_end = FadeInPageContent
 
     def fade_in(self):
         self.opacity = 1
         self.update()
-
-    def did_mount(self):
-        self.fade_in()
 
 
 class Layout(ft.Stack):
@@ -150,5 +159,9 @@ class Layout(ft.Stack):
             self.controls[1].controls.append(page_content())
 
     def did_mount(self):
+        self.controls[0].fade_in()
         self.update_layout()
+        self.update()
+        for control in self.controls[1].controls:
+            control.fade_in()
     
