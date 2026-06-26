@@ -1,5 +1,7 @@
 #!/bin/bash -i
 
+# Stolen from Sygil-Dev/sygil-webui and mangled by moi. GPL v3. 
+
 source "$(conda info --base)/etc/profile.d/conda.sh"
 
 DIRECTORY="."

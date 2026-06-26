@@ -39,7 +39,7 @@ class Quote(ft.Container):
         self.padding = 20
         self.opacity = 0
         self.animate_opacity = ft.Animation(
-            curve = ft.AnimationCurve.EASE_IN_OUT,
+            curve = ft.AnimationCurve.FAST_OUT_SLOWIN,
             duration = ft.Duration(seconds=3),
         )
         self.on_animation_end = self.fade_in
@@ -67,6 +67,9 @@ class Home_Content(ft.Stack):
         self.expand = True
 
     def fade_in(self):
-        for control in self.controls:
-            control.fade_in()
+        self.controls[0].new_quote()
+        self.controls[0].fade_in()
+
+    def did_mount(self):
+        self.fade_in()
 
