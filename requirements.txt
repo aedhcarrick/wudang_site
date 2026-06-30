@@ -1,4 +1,4 @@
 # requirements.txt
 
-flet[all]==0.23.2
-locate==1.1.1
+flet[all]
+locate>=1.1.1
