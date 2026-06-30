@@ -3,5 +3,5 @@
 # requirements.txt
 
 flet[all]
-pyYaml
+locate>=1.1
 
