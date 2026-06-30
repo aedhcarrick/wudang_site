@@ -21,7 +21,7 @@ class Background(ft.ShaderMask):
             content = ft.Container(
                 padding = 0,
                 content = ft.Image(
-                    src = "images/Main-Background.png",
+                    src = "images/Background.png",
                     height = 2400,
                     width = 3600,
                     fit = ft.BoxFit.COVER,

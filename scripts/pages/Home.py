@@ -72,4 +72,3 @@ class Home_Content(ft.Stack):
 
     def did_mount(self):
         self.fade_in()
-

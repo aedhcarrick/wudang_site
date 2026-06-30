@@ -11,7 +11,7 @@ from scripts.controls.Image import Image
 # variables
 
 p_0 = '''
-    Our Instructor: Aedh Carrick
+    Instructor: Aedh Carrick
 '''
 
 p_1 = '''

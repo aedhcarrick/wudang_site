@@ -1,4 +1,4 @@
-# main_page.py
+# main.py
 
 
 # imports
@@ -10,10 +10,12 @@ from scripts.controls.Background import Background
 
 # function definitions
 
-def get_view(route):
-    route_name = '/'
-    if (route == route_name):
+def get_view(page_route):
+    if (page_route == '/'):
         route = '/home'
+    else:
+        route = page_route
+
     view_name = route.lstrip('/').capitalize()
     try:
         view = locate(f'scripts.pages.{view_name}.{view_name}_Content')
@@ -21,11 +23,11 @@ def get_view(route):
     except Exception as e:
         print(f'Module {view_name} not found. Error: {e}')
         view = None
+
     if (route == '/home'):
-        route_name = '/'
+        return '/', view
     else:
-        route_name = route
-    return route_name, view
+        return route, view
 
 
 # class definitions
@@ -86,25 +88,24 @@ def WudangWebsite(page: ft.Page):
     def route_change():
         print(f'route change: {page.route}')
         route, view = get_view(page.route)
-        page.route = route
         if (view == None):
             page.navigate('/')
         else:
+            page.route = route
             page.controls[0].update_layout(view)
     
     page.on_route_change = route_change
 
     def connect():
-        print(f'reconnecting...')
-        page.navigate(page.route)
+        print(f'connecting...')
 
     page.on_connect = connect
 
     page.route = '/'
-    page.navigate(page.route)
+    route_change()
 
 
 
 if __name__ == '__main__':
-    ft.run(WudangWebsite, view=ft.AppView.WEB_BROWSER, port=8080, assets_dir="assets")
+    ft.run(WudangWebsite, view=ft.AppView.WEB_BROWSER, assets_dir="assets")
 

@@ -10,7 +10,7 @@ ENV_NAME="wudang_website"
 ENV_MODIFIED=$(date -r $ENV_FILE "+%s")
 ENV_MODIFIED_FILE=".env_updated"
 ENV_UPDATED=0
-WEBSITE="WudangNOLA_website.py"
+WEBSITE="main.py"
 
 INSTALL_ENV_DIR="$(pwd)/../installer_files/env"
 if [ -e "$INSTALL_ENV_DIR" ]; then export PATH="$INSTALL_ENV_DIR/bin:$PATH"; fi
