@@ -33,7 +33,7 @@ jobs:
 
       - name: Build Web Application
         run: |
-          flet build web --base-url /${{ github.event.repository.name }}/
+          flet build web --yes --verbose --base-url /${{ github.event.repository.name }}/ --route-url-strategy hash
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
