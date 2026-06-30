@@ -22,7 +22,7 @@ env:
 
 jobs:
   build:
-    name: Build web app
+    name: Build web site
     runs-on: ubuntu-latest
 
     steps:
